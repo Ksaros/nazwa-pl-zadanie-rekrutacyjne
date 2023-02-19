@@ -1,76 +1,124 @@
 <?php
 namespace App\Model;
 
-use App\Entity\Klient;
+use App\Entity\Client;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Type;
 
-class KlientModel
+class ClientModel
 {
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('int')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("integer")
+       *
+       * @var int
+       */
       private $lawState;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $nameSurname;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $company;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $street;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $homeNumber;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $city;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $postalCode;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $state;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $phonePrefix;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $phone;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @NotBlank(groups={"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $email;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $pesel;
 
-      #[Groups(['parse'])]
-      #[NotBlank(groups: ['parse'])]
-      #[Type('string')]
+      /**
+       * @Groups({"parse"})
+       * @Type("string")
+       *
+       * @var string
+       */
       private $nip;
 
       public function getLawState(): int
@@ -203,23 +251,23 @@ class KlientModel
             $this->nip = $nip;
       }
 
-      public static function createInstanceFromKlient(Klient $klient): self
+      public static function createInstanceFromClient(Client $client): self
       {
-            $klientModel = new KlientModel();
-            $klientModel->setLawState($klient->getLawState());
-            $klientModel->setNameSurname($klient->getNameSurname());
-            $klientModel->setCompany($klient->getCompany());
-            $klientModel->setStreet($klient->getStreet());
-            $klientModel->setHomeNumber($klient->getHomeNumber());
-            $klientModel->setCity($klient->getCity());
-            $klientModel->setPostalCode($klient->getPostalCode());
-            $klientModel->setState($klient->getState());
-            $klientModel->setPhonePrefix($klient->getPhonePrefix());
-            $klientModel->setPhone($klient->getPhone());
-            $klientModel->setEmail($klient->getEmail());
-            $klientModel->setPesel($klient->getPesel());
-            $klientModel->setNip($klient->getNip());
+            $clientModel = new ClientModel();
+            $clientModel->setLawState($client->getLawState());
+            $clientModel->setNameSurname($client->getNameSurname());
+            $clientModel->setCompany($client->getCompany());
+            $clientModel->setStreet($client->getStreet());
+            $clientModel->setHomeNumber($client->getHomeNumber());
+            $clientModel->setCity($client->getCity());
+            $clientModel->setPostalCode($client->getPostalCode());
+            $clientModel->setState($client->getState());
+            $clientModel->setPhonePrefix($client->getPhonePrefix());
+            $clientModel->setPhone($client->getPhone());
+            $clientModel->setEmail($client->getEmail());
+            $clientModel->setPesel($client->getPesel());
+            $clientModel->setNip($client->getNip());
 
-            return $klientModel;
+            return $clientModel;
       }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Entity;
 
-use App\Repository\KlientRepository;
+use App\Repository\ClientRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=KlientRepository::class)
+ * @ORM\Entity(repositoryClass=ClientRepository::class)
  */
-class Klient
+class Client
 {
     /**
      * @ORM\Id

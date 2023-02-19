@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Model\KlientModel;
-use App\Service\ExamService;
+use App\Model\ClientModel;
+use App\Service\ClientService;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -24,20 +24,18 @@ class ActionController extends AbstractController
     /**
      * @Route("/client/create", name="client_create", methods="POST")
      */
-    public function createClient(Request $request, ExamService $examService): JsonResponse
+    public function createClient(Request $request, ClientService $clientService): JsonResponse
     {
-        $klientModel = $this->deserializeJsonRequest($request, KlientModel::class, ['parse']);
-        dump($klientModel);die;
-        // $name = $request->request->get('name');
-        // $description = $request->request->get('description', '');
+        $clientModel = $this->deserializeJsonRequest($request, ClientModel::class, ['parse']);
+        $result = $clientService->createClient($clientModel);
 
-        // if (empty($name)) {
-        //     return $this->redirectToRoute('exam_index', ['errors' => ['Proszę uzupełnić pole nazwy badania.']]);
-        // }
+        if (is_array($result)) {
+            return new JsonResponse([
+                'success' => false,
+                'data' => $result
+            ], 400);
+        }
 
-        // $examService->createExam($name, $description);
-
-        // return $this->redirectToRoute('exam_index');
         return new JsonResponse([
             'success' => true
         ]);
@@ -46,7 +44,6 @@ class ActionController extends AbstractController
     private function deserializeJsonRequest(Request $request, string $class, ?array $groups = null)
     {
         try {
-            // dump($request->getContent());die;
             $data = $this->serializer->deserialize($request->getContent(), $class, 'json', ['groups' => $groups, 'disable_type_enforcement' => true]);
         } catch (Exception $e) {
             throw new Exception('Nieprawidłowy format danych. Error: ' . $e->getMessage());
