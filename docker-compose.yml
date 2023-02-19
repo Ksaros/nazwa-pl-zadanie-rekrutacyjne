@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+    nginx:
+        build:
+            context: .
+            dockerfile: build/nginx/Dockerfile
+        restart: unless-stopped
+        depends_on:
+            - "php"
+        volumes:
+            - ./symfony/:/var/www/symfony/
+        ports:
+            - 8081:80
+        networks:
+            - form
+
+    php:
+        build:
+            context: .
+            dockerfile: build/php/Dockerfile
+        restart: unless-stopped
+        volumes:
+            - ./symfony/:/var/www/symfony/
+        networks:
+            - form
+
+networks:
+    form:
