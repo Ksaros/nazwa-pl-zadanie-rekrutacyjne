@@ -2,16 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
+use App\Model\ClientModel;
+use App\Repository\ClientRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class ViewsController extends AbstractController
 {
     /**
      * @Route("/{reactRouting}", name="index", methods="GET", defaults={"reactRouting": null})
+     * @Route("/client/{id}", name="get_client", methods="GET", defaults={"id": null})
      */
     public function index(): Response
     {
@@ -21,41 +25,17 @@ class ViewsController extends AbstractController
     /**
      * @Route("/json/{id}", name="client_json", methods="GET", defaults={"id": null})
      */
-    public function clientJson(Request $request): JsonResponse
+    public function clientJson(int $id, ClientRepository $clientRepository, SerializerInterface $serializer): JsonResponse
     {
-        $client = [
-            [
-                'id' => 1,
-                'name' => 'Olususi Oluyemi',
-                'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-                'imageURL' => 'https://randomuser.me/api/portraits/women/50.jpg'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Camila Terry',
-                'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-                'imageURL' => 'https://randomuser.me/api/portraits/men/42.jpg'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Joel Williamson',
-                'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-                'imageURL' => 'https://randomuser.me/api/portraits/women/67.jpg'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Deann Payne',
-                'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-                'imageURL' => 'https://randomuser.me/api/portraits/women/50.jpg'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Donald Perkins',
-                'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation',
-                'imageURL' => 'https://randomuser.me/api/portraits/men/89.jpg'
-            ]
-        ];
+        $client = $clientRepository->find($id);
+        if (!$client instanceof Client) {
+            return new JsonResponse([], 400);
+        }
 
-        return new JsonResponse($client);
+        return new JsonResponse($serializer->normalize(
+            ClientModel::createInstanceFromClient($client),
+            null,
+            ['parse']
+        ));
     }
 }
