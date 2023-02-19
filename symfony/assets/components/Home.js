@@ -1,15 +1,18 @@
 import React, { useEffect } from 'react';
-import { Route, Routes as Switch, Navigate, Link, withRouter, useNavigate } from 'react-router-dom';
+import { Route, Routes as Switch, useLocation, useNavigate } from 'react-router-dom';
 import Client from './Client';
 import RegisterForm from './RegisterForm';
 
 const Home = () => {
       const navigate = useNavigate();
+      const location = useLocation();
 
       useEffect(() => {
-            navigate("/register");
+            if (location.pathname === "/") {
+                  navigate("/register");
+            }
 
-      }, [])
+      }, []);
 
       return (
             <div>

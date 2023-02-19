@@ -43,6 +43,24 @@ const RegisterForm = () => {
             });
       };
 
+      const handleLawStateChange = (e) => {
+            if (e.target.value === "0") {
+                  setData({
+                        ...data,
+                        lawState: e.target.value,
+                        company: "",
+                        nip: ""
+                  });
+            } else {
+                  setData({
+                        ...data,
+                        lawState: e.target.value,
+                        nameSurname: "",
+                        pesel: ""
+                  });
+            }
+      };
+
       const validateData = (form) => {
             if (typeof data !== 'object') {
                   return;
@@ -142,19 +160,36 @@ const RegisterForm = () => {
       const register = async (form) => {
             return await axios.post(`/client/create`, data)
                   .then((response) => {
-                        console.log(response);
                         if (response.data && response.data.success) {
                               form.reset();
+                              if (!form.classList.contains('was-validated')) {
+                                    form.classList.remove('was-validated');
+                              }
+
                               alert("Poprawnie dodano klienta.");
+                        }
+                        if (response.data && !response.data.success && response.data.data) {
+                              let e = { ...defaultErrors };
+                              for (const prop in response.data.data) {
+                                    form.querySelector('#' + prop).setCustomValidity(true);
+                                    e[prop] = response.data.data[prop];
+                              }
+
+                              setErrors(e);
+                              form.checkValidity();
+                              if (!form.classList.contains('was-validated')) {
+                                    form.classList.add('was-validated');
+                              }
                         }
                   })
                   .catch((err) => {
                         console.error('Niepowodzenie rejestracji klienta.');
-                        console.log(err);
                   });
       }
 
       const handleSubmit = (e) => {
+            e.preventDefault();
+            console.log(e);
             validateData(e.target);
             if (!e.target.classList.contains('was-validated')) {
                   e.target.classList.add('was-validated');
@@ -176,34 +211,43 @@ const RegisterForm = () => {
       useEffect(() => {
             if (!states.length) {
                   axios.get('http://api.dro.nazwa.pl/')
-                  .then((response) => {
-                        if (response.status === 200 && response.data.length) {
-                              setStates(response.data);
-                        }
-                  })
-                  .catch((err) => {
-                        console.error('Niepowodzenie pobierania województw.');
-                  });
+                        .then((response) => {
+                              if (response.status === 200 && response.data.length) {
+                                    setStates(response.data);
+                              }
+                        })
+                        .catch((err) => {
+                              console.error('Niepowodzenie pobierania województw.');
+                        });
             }
       }, []);
 
+      const resetForm = (e) => {
+            if (e.target.classList.contains('was-validated')) {
+                  e.target.classList.remove('was-validated');
+            }
+
+            setData({ ...defaultData });
+            setErrors({ ...defaultErrors });
+      };
+
       return (
-            <>
+            <div className='container'>
                   <h2>DANE IDENTYFIKACYJNE</h2>
                   <hr />
 
-                  <form className='w-50 m-auto needs-validation' onSubmit={handleSubmit} noValidate>
+                  <form className='w-50 m-auto needs-validation' id='registerForm' onSubmit={handleSubmit} onReset={resetForm} noValidate>
                         <fieldset className="row mb-3">
                               <span className="col-sm-4 col-form-label">Status prawny:</span>
                               <div className="col-sm-8">
                                     <div className="form-check d-inline-block m-2">
-                                          <input className="form-check-input" type="radio" name="lawState" id="lawState1" value="0" onChange={handleOnChange} checked={data.lawState === "0"} />
+                                          <input className="form-check-input" type="radio" name="lawState" id="lawState1" value="0" onChange={handleLawStateChange} checked={data.lawState === "0"} />
                                           <label className="form-check-label" htmlFor="lawState1">
                                                 klient indywidualny
                                           </label>
                                     </div>
                                     <div className="form-check d-inline-block">
-                                          <input className="form-check-input" type="radio" name="lawState" id="lawState2" value="1" onChange={handleOnChange} checked={data.lawState === "1"} />
+                                          <input className="form-check-input" type="radio" name="lawState" id="lawState2" value="1" onChange={handleLawStateChange} checked={data.lawState === "1"} />
                                           <label className="form-check-label" htmlFor="lawState2">
                                                 Firma
                                           </label>
@@ -315,11 +359,14 @@ const RegisterForm = () => {
                                     </div>
                               </div>
                         </div> : <></>}
-
-                        <button type="reset" className="btn btn-secondary">ANULUJ</button>
-                        <button type="submit" /* onClick={} */ className="btn btn-primary">ZAPISZ</button>
                   </form>
-            </>
+
+                  <hr />
+                  <div className='d-flex flex-row justify-content-end'>
+                        <button type='reset' form='registerForm' className="btn btn-light bg-transparent">ANULUJ</button>
+                        <button type='submit' form='registerForm' className="btn btn-primary">ZAPISZ</button>
+                  </div>
+            </div>
       );
 };
 
