@@ -1,6 +1,7 @@
 # Zadanie rekrutacyjne Nazwa.pl
 
-# Instrukcja:
+#### Instrukcja:
+
 1. w katalogu głównym odpalamy skrypt build.sh
 2. uruchamiamy skrypt bash_php.sh
 3. W terminalu kontenera odpalamy skrypt prepare.sh
